@@ -1,0 +1,10 @@
+# Control Centre — SPA fallback for Apache/cPanel
+# Ensures React Router works: all routes serve index.html.
+
+<IfModule mod_rewrite.c>
+  RewriteEngine On
+  RewriteBase /
+  RewriteCond %{REQUEST_FILENAME} !-f
+  RewriteCond %{REQUEST_FILENAME} !-d
+  RewriteRule . /index.html [L]
+</IfModule>

@@ -35,6 +35,16 @@ npm run build
 npm run preview
 ```
 
+Output is in `dist/`. Use it with any static host or your own server.
+
+## Deploy to controlcentre.wabanakisoftwaresolutions.com
+
+1. Run `npm run build`.
+2. Upload the contents of `dist/` to your server.
+3. Point the subdomain at that folder (Nginx/Apache) with SPA fallback so all routes serve `index.html`.
+
+See **[DEPLOY.md](DEPLOY.md)** for step-by-step instructions, Nginx config, Apache example, DNS, and HTTPS.
+
 ## Tech
 
 - React 18 + Vite
