@@ -18,6 +18,25 @@
   margin-top: 1rem;
 }
 
+/* Reserve space for right column so boards don't shift when protocol form opens */
+@media (min-width: 880px) {
+  .dashboard-hero-content {
+    position: relative;
+  }
+
+  .dashboard-hero-left {
+    margin-right: 435px; /* max-width of right column + gap */
+  }
+
+  .dashboard-hero-right {
+    position: absolute;
+    right: 0;
+    top: 0;
+    max-height: 85vh;
+    overflow-y: auto;
+  }
+}
+
 .dashboard-hero-right {
   flex-shrink: 0;
   min-width: 280px;
