@@ -21,14 +21,14 @@ export default function App() {
 
   if (!user) {
     return (
-      <StoreProvider>
+      <StoreProvider user={null}>
         <Login />
       </StoreProvider>
     )
   }
 
   return (
-    <StoreProvider>
+    <StoreProvider user={user}>
       <Layout user={user} onLogout={signOut}>
         <Routes>
           <Route path="/" element={<Dashboard />} />

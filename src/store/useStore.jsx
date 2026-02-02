@@ -46,7 +46,7 @@ function saveStateToStorage(state) {
 function reducer(state, action) {
   switch (action.type) {
     case 'ADD_PROJECT': {
-      const id = generateId()
+      const id = action.payload.id ?? generateId()
       const projects = [
         ...state.projects,
         {
@@ -168,19 +168,37 @@ function reducer(state, action) {
 
 const StoreContext = createContext(null)
 
-export function StoreProvider({ children }) {
+function hasAnyData(state) {
+  return (
+    (state.projects?.length ?? 0) > 0 ||
+    Object.keys(state.tasks ?? {}).length > 0 ||
+    (state.protocols?.length ?? 0) > 0 ||
+    Object.keys(state.protocolFiles ?? {}).length > 0
+  )
+}
+
+export function StoreProvider({ children, user }) {
   const [state, dispatch] = useReducer(reducer, loadStateFromStorage())
   const hydrateFromFirestoreRef = useRef(false)
   const firestoreLoadedRef = useRef(false)
 
   const unsubFirestoreRef = useRef(null)
   useEffect(() => {
+    if (!user) {
+      firestoreLoadedRef.current = false
+      return
+    }
     loadStateFromFirestore()
       .then((firestoreState) => {
         firestoreLoadedRef.current = true
-        if (firestoreState) {
+        if (firestoreState && hasAnyData(firestoreState)) {
           hydrateFromFirestoreRef.current = true
           dispatch({ type: 'HYDRATE', payload: firestoreState })
+        } else {
+          const localState = loadStateFromStorage()
+          if (hasAnyData(localState)) {
+            saveStateToFirestore(localState).catch((e) => console.warn('Firestore initial push failed', e))
+          }
         }
         unsubFirestoreRef.current = subscribeToFirestore((firestoreState) => {
           hydrateFromFirestoreRef.current = true
@@ -192,25 +210,21 @@ export function StoreProvider({ children }) {
       if (typeof unsubFirestoreRef.current === 'function') {
         unsubFirestoreRef.current()
       }
+      firestoreLoadedRef.current = false
     }
-  }, [])
+  }, [user])
 
   useEffect(() => {
-    if (
-      state.projects.length > 0 ||
-      Object.keys(state.tasks).length > 0 ||
-      state.protocols?.length > 0 ||
-      Object.keys(state.protocolFiles ?? {}).length > 0
-    ) {
+    if (hasAnyData(state)) {
       saveStateToStorage(state)
     }
     if (hydrateFromFirestoreRef.current) {
       hydrateFromFirestoreRef.current = false
       return
     }
-    if (!firestoreLoadedRef.current) return
+    if (!user || !firestoreLoadedRef.current) return
     saveStateToFirestore(state)
-  }, [state])
+  }, [state, user])
 
   return (
     <StoreContext.Provider value={{ state, dispatch }}>

@@ -2,6 +2,8 @@ import { useState } from 'react'
 import { Link } from 'react-router-dom'
 import { useStore } from '../store/useStore'
 import { sendDiscordUpdate } from '../services/discord'
+import { getBoardUrl } from '../lib/appUrl'
+import { generateId } from '../lib/uuid'
 import EmergencyProtocols from './EmergencyProtocols'
 import './Dashboard.css'
 
@@ -19,8 +21,9 @@ export default function Dashboard() {
     const name = newName.trim()
     if (!name) return
     const githubRepo = newGithubRepo.trim()
-    dispatch({ type: 'ADD_PROJECT', payload: { name, githubRepo } })
-    sendDiscordUpdate('project_created', { name })
+    const id = generateId()
+    dispatch({ type: 'ADD_PROJECT', payload: { id, name, githubRepo } })
+    sendDiscordUpdate('project_created', { name, boardUrl: getBoardUrl(id) })
     setNewName('')
     setNewGithubRepo('')
     setShowAdd(false)
@@ -34,7 +37,7 @@ export default function Dashboard() {
     const oldName = project?.name
     const githubRepo = editGithubRepo.trim()
     dispatch({ type: 'EDIT_PROJECT', payload: { id: editingId, name, githubRepo } })
-    sendDiscordUpdate('project_edited', { name, oldName })
+    sendDiscordUpdate('project_edited', { name, oldName, boardUrl: getBoardUrl(editingId) })
     setEditingId(null)
     setEditName('')
     setEditGithubRepo('')

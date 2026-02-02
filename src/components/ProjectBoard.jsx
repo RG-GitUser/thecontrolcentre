@@ -2,6 +2,7 @@ import { useState } from 'react'
 import { useParams, Link } from 'react-router-dom'
 import { useStore } from '../store/useStore'
 import { sendDiscordUpdate, fetchLatestCommit, ELSI_REPO } from '../services/discord'
+import { getBoardUrl } from '../lib/appUrl'
 import TaskCard from './TaskCard'
 import './ProjectBoard.css'
 
@@ -46,6 +47,7 @@ export default function ProjectBoard() {
       projectName: project.name,
       projectRepo: project.githubRepo || undefined,
       overrideCommit: pulledCommit || undefined,
+      boardUrl: getBoardUrl(projectId),
     })
     setNewTitle('')
     setNewDescription('')
@@ -70,6 +72,7 @@ export default function ProjectBoard() {
       oldStatus: hadStatusChange ? statusLabels[task.status] : undefined,
       newStatus: hadStatusChange ? statusLabels[rest.status] : undefined,
       details: rest.title != null && rest.title !== task.title ? `Title updated.` : undefined,
+      boardUrl: getBoardUrl(projectId),
     })
   }
 
@@ -77,10 +80,11 @@ export default function ProjectBoard() {
     if (window.confirm('Remove this task?')) {
       dispatch({ type: 'DELETE_TASK', payload: { projectId, taskId: task.id } })
       sendDiscordUpdate('task_deleted', {
-      title: task.title,
-      projectName: project.name,
-      projectRepo: project.githubRepo || undefined,
-    })
+        title: task.title,
+        projectName: project.name,
+        projectRepo: project.githubRepo || undefined,
+        boardUrl: getBoardUrl(projectId),
+      })
     }
   }
 

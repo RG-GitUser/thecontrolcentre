@@ -73,7 +73,7 @@ function buildMissionEmbed(type, payload, meta) {
   if (taskTypes.includes(type) && statusValue) {
     baseFields.splice(taskTypes.includes(type) && payload.projectName ? 2 : 1, 0, { name: 'TASK STATUS', value: statusValue, inline: false })
   }
-  return {
+  const embed = {
     title: titles[type] ?? 'CONTROL CENTRE UPDATE',
     description: descriptions[type] ?? 'Something changed.',
     color: COLOR_MISSION,
@@ -81,6 +81,10 @@ function buildMissionEmbed(type, payload, meta) {
     footer: { text: 'THE CONTROL CENTRE • MISSION TRACKER' },
     timestamp: meta.now.toISOString(),
   }
+  if (payload.boardUrl?.trim()) {
+    embed.url = payload.boardUrl.trim()
+  }
+  return embed
 }
 
 const PROTOCOL_DESC_MAX = 600
