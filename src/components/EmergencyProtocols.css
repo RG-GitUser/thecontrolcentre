@@ -1,0 +1,287 @@
+/* Emergency Protocols — space alert theme */
+.emergency-protocols {
+  margin-top: 2.5rem;
+  padding-top: 1.5rem;
+  border-top: 1px solid var(--border);
+}
+
+.emergency-protocols-header {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 0.25rem;
+  margin-bottom: 1rem;
+}
+
+.emergency-protocols-icon {
+  font-size: 1.5rem;
+  filter: drop-shadow(0 0 8px rgba(255, 180, 70, 0.6));
+  animation: emergency-pulse 2s ease-in-out infinite;
+}
+
+@keyframes emergency-pulse {
+  0%, 100% { opacity: 1; transform: scale(1); }
+  50% { opacity: 0.85; transform: scale(1.05); }
+}
+
+.emergency-protocols-title {
+  font-family: var(--font-display);
+  font-size: 1.25rem;
+  margin: 0;
+  color: var(--accent-warm);
+  text-shadow: 0 0 16px rgba(255, 179, 71, 0.4);
+  letter-spacing: 0.08em;
+}
+
+.emergency-protocols-subtitle {
+  margin: 0;
+  font-size: 0.85rem;
+  color: var(--text-muted);
+}
+
+.emergency-protocols-actions {
+  margin-bottom: 1rem;
+}
+
+.emergency-btn {
+  background: linear-gradient(135deg, rgba(255, 179, 71, 0.2), rgba(255, 179, 71, 0.35));
+  border-color: var(--accent-warm);
+  color: var(--accent-warm);
+}
+
+.emergency-btn:hover {
+  box-shadow: 0 0 14px rgba(255, 179, 71, 0.3);
+}
+
+.emergency-protocols-form {
+  margin-bottom: 1.5rem;
+  max-width: 560px;
+  padding: 0;
+  border-color: rgba(255, 179, 71, 0.4);
+  box-shadow: 0 0 20px rgba(255, 179, 71, 0.08);
+}
+
+.emergency-form-header {
+  color: var(--accent-warm);
+  border-bottom-color: rgba(255, 179, 71, 0.3);
+}
+
+.emergency-form {
+  padding: 1rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.emergency-field {
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+}
+
+.emergency-label {
+  font-size: 0.85rem;
+  color: var(--text-muted);
+}
+
+.emergency-description {
+  resize: vertical;
+  min-height: 100px;
+}
+
+.emergency-tag-row {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.4rem;
+  margin-top: 0.35rem;
+}
+
+.emergency-tag-label {
+  font-size: 0.8rem;
+  color: var(--text-muted);
+  margin-right: 0.25rem;
+}
+
+.emergency-tag-btn {
+  font-size: 0.75rem;
+  padding: 0.25rem 0.5rem;
+  border-color: var(--border);
+  color: var(--accent);
+}
+
+.emergency-tag-btn:hover {
+  border-color: var(--accent);
+  color: var(--text);
+}
+
+.emergency-tag-hint {
+  font-size: 0.8rem;
+  color: var(--text-muted);
+  font-style: italic;
+}
+
+.emergency-file-input {
+  font-size: 0.85rem;
+  color: var(--text-muted);
+}
+
+.emergency-error {
+  margin: 0.25rem 0 0 0;
+  font-size: 0.85rem;
+  color: var(--danger);
+}
+
+.emergency-file-list {
+  list-style: none;
+  margin: 0.5rem 0 0 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+}
+
+.emergency-file-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0.35rem 0.5rem;
+  background: var(--bg-deep);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  font-size: 0.85rem;
+}
+
+.emergency-file-remove {
+  padding: 0.15rem 0.4rem;
+  font-size: 1rem;
+  line-height: 1;
+  color: var(--text-muted);
+}
+
+.emergency-form-actions {
+  display: flex;
+  gap: 0.5rem;
+}
+
+.emergency-protocols-list {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.emergency-empty {
+  font-size: 0.9rem;
+  color: var(--text-muted);
+  font-style: italic;
+  padding: 1rem 0;
+}
+
+.emergency-protocol-card {
+  padding: 1rem;
+  border-left: 3px solid var(--accent-warm);
+  background: var(--bg-panel);
+  box-shadow: 0 0 12px rgba(255, 179, 71, 0.06);
+}
+
+.emergency-card-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 0.75rem;
+}
+
+.emergency-card-badge {
+  font-family: var(--font-display);
+  font-size: 0.7rem;
+  letter-spacing: 0.08em;
+  color: var(--accent-warm);
+  padding: 0.2rem 0.5rem;
+  border: 1px solid rgba(255, 179, 71, 0.5);
+  border-radius: var(--radius);
+}
+
+.emergency-card-date {
+  font-size: 0.8rem;
+  color: var(--text-muted);
+}
+
+.emergency-card-description {
+  font-size: 0.95rem;
+  line-height: 1.5;
+  color: var(--text);
+  margin-bottom: 0.75rem;
+  white-space: pre-wrap;
+  word-break: break-word;
+}
+
+.emergency-card-description .protocol-tag {
+  color: var(--accent);
+  font-weight: 500;
+  padding: 0.1rem 0.3rem;
+  background: rgba(0, 212, 170, 0.12);
+  border-radius: 3px;
+}
+
+.emergency-card-files {
+  list-style: none;
+  margin: 0 0 0.75rem 0;
+  padding: 0;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+}
+
+.emergency-card-file {
+  margin: 0;
+}
+
+.emergency-file-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  font-size: 0.85rem;
+  color: var(--accent);
+  text-decoration: none;
+  padding: 0.35rem 0.5rem;
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  background: var(--bg-deep);
+  transition: border-color 0.2s;
+}
+
+.emergency-file-link:hover {
+  border-color: var(--accent);
+}
+
+.emergency-thumb {
+  max-width: 48px;
+  max-height: 48px;
+  object-fit: cover;
+  border-radius: 2px;
+}
+
+.emergency-card-footer {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.75rem;
+  padding-top: 0.5rem;
+  border-top: 1px solid var(--border);
+  font-size: 0.8rem;
+  color: var(--text-muted);
+}
+
+.emergency-card-author {
+  font-style: italic;
+}
+
+.emergency-card-tagged {
+  color: var(--accent);
+}
+
+.emergency-card-delete {
+  margin-left: auto;
+  font-size: 0.75rem;
+  padding: 0.25rem 0.5rem;
+}
