@@ -65,29 +65,89 @@ export default function Dashboard() {
     <div className="dashboard">
       <div className="dashboard-hero">
         <div className="dashboard-hero-content">
-          <div>
+          <div className="dashboard-hero-left">
             <h1 className="dashboard-title">MISSION DASHBOARD</h1>
             <p className="dashboard-subtitle">Select a project board or deploy a new one</p>
+            <div className="dashboard-deploy-row">
+              <img
+                src={`${import.meta.env.BASE_URL || '/'}assets/alien.png`}
+                alt=""
+                className="dashboard-alien dashboard-alien-flipped"
+                aria-hidden
+              />
+              <button
+                type="button"
+                className="btn btn-primary"
+                onClick={() => setShowAdd(true)}
+              >
+                + Deploy new board
+              </button>
+            </div>
+          </div>
+          <div className="dashboard-hero-right">
+            <EmergencyProtocols />
           </div>
         </div>
       </div>
 
-      <div className="dashboard-actions">
-        <div className="dashboard-deploy-row">
-          <img
-            src={`${import.meta.env.BASE_URL || '/'}assets/alien.png`}
-            alt=""
-            className="dashboard-alien dashboard-alien-flipped"
-            aria-hidden
-          />
-          <button
-            type="button"
-            className="btn btn-primary"
-            onClick={() => setShowAdd(true)}
-          >
-            + Deploy new board
-          </button>
-        </div>
+      <div className="dashboard-grid">
+          {state.projects.length === 0 && !showAdd && (
+            <div className="dashboard-empty">
+              <span className="dashboard-empty-icon">🛸</span>
+              <p>No project boards yet. Deploy your first one.</p>
+            </div>
+          )}
+          {state.projects.map((project) => (
+            <div key={project.id} className="panel dashboard-card">
+              {editingId === project.id ? (
+                <form onSubmit={handleEdit} className="dashboard-card-edit">
+                  <label className="dashboard-form-label">
+                    <span>Board name</span>
+                    <input
+                      type="text"
+                      className="input"
+                      value={editName}
+                      onChange={(e) => setEditName(e.target.value)}
+                      autoFocus
+                    />
+                  </label>
+                  <label className="dashboard-form-label">
+                    <span>GitHub repo (optional)</span>
+                    <input
+                      type="text"
+                      className="input"
+                      placeholder="owner/repo"
+                      value={editGithubRepo}
+                      onChange={(e) => setEditGithubRepo(e.target.value)}
+                    />
+                  </label>
+                  <div className="dashboard-card-edit-actions">
+                    <button type="submit" className="btn btn-primary">Save</button>
+                    <button type="button" className="btn" onClick={() => { setEditingId(null); setEditName(''); setEditGithubRepo(''); }}>Cancel</button>
+                  </div>
+                </form>
+              ) : (
+                <>
+                  <div className="dashboard-card-header">
+                    <h2 className="dashboard-card-title">{project.name}</h2>
+                    <div className="dashboard-card-meta">
+                      <span>{completedCount(project.id)} / {taskCount(project.id)} tasks</span>
+                      {(project.githubRepo ?? '').trim() && (
+                        <span className="dashboard-card-repo" title={project.githubRepo}>Repo linked</span>
+                      )}
+                    </div>
+                  </div>
+                  <div className="dashboard-card-actions">
+                    <Link to={`/board/${project.id}`} className="btn btn-primary dashboard-card-open">
+                      Open board
+                    </Link>
+                    <button type="button" className="btn" onClick={() => startEdit(project)}>Edit</button>
+                    <button type="button" className="btn btn-danger" onClick={() => handleDelete(project)}>Delete</button>
+                  </div>
+                </>
+              )}
+            </div>
+          ))}
       </div>
 
       {showAdd && (
@@ -122,68 +182,6 @@ export default function Dashboard() {
           </form>
         </div>
       )}
-
-      <div className="dashboard-grid">
-        {state.projects.length === 0 && !showAdd && (
-          <div className="dashboard-empty">
-            <span className="dashboard-empty-icon">🛸</span>
-            <p>No project boards yet. Deploy your first one above.</p>
-          </div>
-        )}
-        {state.projects.map((project) => (
-          <div key={project.id} className="panel dashboard-card">
-            {editingId === project.id ? (
-              <form onSubmit={handleEdit} className="dashboard-card-edit">
-                <label className="dashboard-form-label">
-                  <span>Board name</span>
-                  <input
-                    type="text"
-                    className="input"
-                    value={editName}
-                    onChange={(e) => setEditName(e.target.value)}
-                    autoFocus
-                  />
-                </label>
-                <label className="dashboard-form-label">
-                  <span>GitHub repo (optional)</span>
-                  <input
-                    type="text"
-                    className="input"
-                    placeholder="owner/repo"
-                    value={editGithubRepo}
-                    onChange={(e) => setEditGithubRepo(e.target.value)}
-                  />
-                </label>
-                <div className="dashboard-card-edit-actions">
-                  <button type="submit" className="btn btn-primary">Save</button>
-                  <button type="button" className="btn" onClick={() => { setEditingId(null); setEditName(''); setEditGithubRepo(''); }}>Cancel</button>
-                </div>
-              </form>
-            ) : (
-              <>
-                <div className="dashboard-card-header">
-                  <h2 className="dashboard-card-title">{project.name}</h2>
-                  <div className="dashboard-card-meta">
-                    <span>{completedCount(project.id)} / {taskCount(project.id)} tasks</span>
-                    {(project.githubRepo ?? '').trim() && (
-                      <span className="dashboard-card-repo" title={project.githubRepo}>Repo linked</span>
-                    )}
-                  </div>
-                </div>
-                <div className="dashboard-card-actions">
-                  <Link to={`/board/${project.id}`} className="btn btn-primary dashboard-card-open">
-                    Open board
-                  </Link>
-                  <button type="button" className="btn" onClick={() => startEdit(project)}>Edit</button>
-                  <button type="button" className="btn btn-danger" onClick={() => handleDelete(project)}>Delete</button>
-                </div>
-              </>
-            )}
-          </div>
-        ))}
-      </div>
-
-      <EmergencyProtocols />
     </div>
   )
 }
