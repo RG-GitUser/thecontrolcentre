@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react'
 import { getSettings, saveSettings } from '../settings/useSettings'
 import { fetchLatestCommit } from '../services/discord'
 import { hashPassword } from '../lib/auth'
+import { generateId } from '../lib/uuid'
 import './Settings.css'
 
 function notifySettingsSaved() {
@@ -87,7 +88,7 @@ export default function Settings() {
       const passwordHash = await hashPassword(password)
       const next = [
         ...teamMembers,
-        { id: crypto.randomUUID(), name, username, passwordHash },
+        { id: generateId(), name, username, passwordHash },
       ]
       setTeamMembers(next)
       setNewMemberName('')

@@ -1,4 +1,5 @@
 import { createContext, useContext, useReducer, useEffect } from 'react'
+import { generateId } from '../lib/uuid'
 
 const STORAGE_KEY = 'controlcenter-tracker'
 
@@ -40,7 +41,7 @@ function saveState(state) {
 function reducer(state, action) {
   switch (action.type) {
     case 'ADD_PROJECT': {
-      const id = crypto.randomUUID()
+      const id = generateId()
       const projects = [
         ...state.projects,
         {
@@ -76,7 +77,7 @@ function reducer(state, action) {
     case 'ADD_TASK': {
       const { projectId, title, description = '' } = action.payload
       const task = {
-        id: crypto.randomUUID(),
+        id: generateId(),
         projectId,
         title,
         description,
@@ -108,11 +109,11 @@ function reducer(state, action) {
 
     case 'ADD_PROTOCOL': {
       const { description, authorId, taggedUserIds, files } = action.payload
-      const protocolId = crypto.randomUUID()
+      const protocolId = generateId()
       const fileIds = []
       const protocolFiles = { ...state.protocolFiles }
       for (const f of files ?? []) {
-        const fid = crypto.randomUUID()
+        const fid = generateId()
         fileIds.push(fid)
         protocolFiles[fid] = { name: f.name, mimeType: f.mimeType, size: f.size, dataUrl: f.dataUrl }
       }

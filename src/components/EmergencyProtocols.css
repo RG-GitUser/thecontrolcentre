@@ -121,9 +121,40 @@
   font-style: italic;
 }
 
+.emergency-file-row {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin-top: 0.25rem;
+}
+
 .emergency-file-input {
+  position: absolute;
+  width: 0.1px;
+  height: 0.1px;
+  opacity: 0;
+  overflow: hidden;
+  z-index: -1;
+}
+
+.emergency-file-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0.5rem 1rem;
+  border-radius: var(--radius);
+  border: 1px solid var(--border);
+  background: var(--bg-elevated);
+  color: var(--text);
   font-size: 0.85rem;
-  color: var(--text-muted);
+  font-family: var(--font-mono);
+  cursor: pointer;
+  transition: border-color 0.2s, box-shadow 0.2s;
+}
+
+.emergency-file-btn:hover {
+  border-color: var(--accent-dim);
+  box-shadow: 0 0 12px rgba(0, 212, 170, 0.2);
 }
 
 .emergency-error {

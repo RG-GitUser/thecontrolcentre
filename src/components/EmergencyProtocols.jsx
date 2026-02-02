@@ -204,13 +204,19 @@ export default function EmergencyProtocols() {
             </label>
             <label className="emergency-field">
               <span className="emergency-label">Attach files (docs &amp; images, max {MAX_FILES}, {MAX_FILE_BYTES / 1024}KB each)</span>
-              <input
-                type="file"
-                className="emergency-file-input"
-                accept=".pdf,.doc,.docx,.txt,.png,.jpg,.jpeg,.gif,.webp,.svg"
-                multiple
-                onChange={onFileChange}
-              />
+              <span className="emergency-file-row">
+                <input
+                  id="emergency-file-input"
+                  type="file"
+                  className="emergency-file-input"
+                  accept=".pdf,.doc,.docx,.txt,.png,.jpg,.jpeg,.gif,.webp,.svg"
+                  multiple
+                  onChange={onFileChange}
+                />
+                <label htmlFor="emergency-file-input" className="btn emergency-file-btn">
+                  Choose files
+                </label>
+              </span>
               {fileError && <p className="emergency-error">{fileError}</p>}
               {files.length > 0 && (
                 <ul className="emergency-file-list">
