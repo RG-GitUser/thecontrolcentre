@@ -66,23 +66,25 @@ export default function Dashboard() {
             <h1 className="dashboard-title">MISSION DASHBOARD</h1>
             <p className="dashboard-subtitle">Select a project board or deploy a new one</p>
           </div>
-          <img
-            src={`${import.meta.env.BASE_URL || '/'}assets/alien.png`}
-            alt=""
-            className="dashboard-alien"
-            aria-hidden
-          />
         </div>
       </div>
 
       <div className="dashboard-actions">
-        <button
-          type="button"
-          className="btn btn-primary"
-          onClick={() => setShowAdd(true)}
-        >
-          + Deploy new board
-        </button>
+        <div className="dashboard-deploy-row">
+          <img
+            src={`${import.meta.env.BASE_URL || '/'}assets/alien.png`}
+            alt=""
+            className="dashboard-alien dashboard-alien-flipped"
+            aria-hidden
+          />
+          <button
+            type="button"
+            className="btn btn-primary"
+            onClick={() => setShowAdd(true)}
+          >
+            + Deploy new board
+          </button>
+        </div>
       </div>
 
       {showAdd && (

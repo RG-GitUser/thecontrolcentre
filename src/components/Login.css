@@ -9,6 +9,7 @@
 }
 
 .login-video-wrap {
+  position: relative;
   flex-shrink: 0;
   max-width: 320px;
   border-radius: var(--radius);
@@ -23,6 +24,19 @@
   height: auto;
   pointer-events: none;
   user-select: none;
+  transition: opacity 0.2s ease;
+}
+
+.login-video-a {
+  position: relative;
+  z-index: 1;
+}
+
+.login-video-b {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  opacity: 0;
 }
 
 .login-panel {

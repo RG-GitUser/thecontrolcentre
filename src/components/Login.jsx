@@ -1,7 +1,9 @@
-import { useState } from 'react'
+import { useState, useRef } from 'react'
 import { signInWithEmailAndPassword, createUserWithEmailAndPassword, updateProfile } from 'firebase/auth'
 import { auth } from '../lib/firebase'
 import './Login.css'
+
+const LOOP_BUFFER = 0.15 // seconds before end to start next video
 
 export default function Login() {
   const [email, setEmail] = useState('')
@@ -10,6 +12,43 @@ export default function Login() {
   const [signUp, setSignUp] = useState(false)
   const [error, setError] = useState('')
   const [loading, setLoading] = useState(false)
+  const videoARef = useRef(null)
+  const videoBRef = useRef(null)
+  const activeRef = useRef('A')
+  const switchingRef = useRef(false)
+
+  const switchTo = (which) => {
+    if (switchingRef.current) return
+    const a = videoARef.current
+    const b = videoBRef.current
+    if (!a || !b) return
+    switchingRef.current = true
+    if (which === 'B') {
+      a.pause()
+      b.currentTime = 0
+      b.play().catch(() => {})
+      a.style.opacity = '0'
+      b.style.opacity = '1'
+      activeRef.current = 'B'
+    } else {
+      b.pause()
+      a.currentTime = 0
+      a.play().catch(() => {})
+      b.style.opacity = '0'
+      a.style.opacity = '1'
+      activeRef.current = 'A'
+    }
+    setTimeout(() => { switchingRef.current = false }, 300)
+  }
+
+  const onTimeUpdateA = () => {
+    const v = videoARef.current
+    if (v && activeRef.current === 'A' && v.duration && v.currentTime >= v.duration - LOOP_BUFFER) switchTo('B')
+  }
+  const onTimeUpdateB = () => {
+    const v = videoBRef.current
+    if (v && activeRef.current === 'B' && v.duration && v.currentTime >= v.duration - LOOP_BUFFER) switchTo('A')
+  }
   const handleSubmit = async (e) => {
     e.preventDefault()
     setError('')
@@ -53,13 +92,24 @@ export default function Login() {
     <div className="login">
       <div className="login-video-wrap">
         <video
-          className="login-video"
-          src={`${baseUrl}assets/alienpals.mp4`}
+          ref={videoARef}
+          className="login-video login-video-a"
+          src={`${baseUrl}assets/controlcentre (1).mp4`}
           autoPlay
           muted
-          loop
           playsInline
           preload="auto"
+          onTimeUpdate={onTimeUpdateA}
+          aria-hidden
+        />
+        <video
+          ref={videoBRef}
+          className="login-video login-video-b"
+          src={`${baseUrl}assets/controlcentre (1).mp4`}
+          muted
+          playsInline
+          preload="auto"
+          onTimeUpdate={onTimeUpdateB}
           aria-hidden
         />
       </div>
