@@ -1,14 +1,9 @@
 import { useState, useEffect } from 'react'
 import { Link } from 'react-router-dom'
-import { getSettings, saveSettings } from '../settings/useSettings'
-import { clearSession } from '../lib/auth'
+import { getSettings } from '../settings/useSettings'
 import './Layout.css'
 
-function notifySettingsSaved() {
-  window.dispatchEvent(new CustomEvent('settingsSaved'))
-}
-
-export default function Layout({ children, onLogout }) {
+export default function Layout({ children, user, onLogout }) {
   const [, setRefresh] = useState(0)
   const settings = getSettings()
 
@@ -20,10 +15,7 @@ export default function Layout({ children, onLogout }) {
 
   const discordOn = settings.discordEnabled && !!settings.discordWebhookUrl?.trim()
   const githubOn = settings.githubEnabled && !!settings.githubRepo?.trim()
-  const members = settings.teamMembers ?? []
-  const currentId = settings.currentUserId
-  const currentMember = currentId ? members.find((m) => m.id === currentId) : null
-  const currentUserName = currentMember?.name?.trim() || settings.userName?.trim() || null
+  const currentUserName = user?.displayName?.trim() || user?.email || settings.userName?.trim() || null
 
   return (
     <div className="layout">
@@ -35,7 +27,7 @@ export default function Layout({ children, onLogout }) {
         <nav className="layout-nav">
           <div className="layout-status">
             {currentUserName && (
-              <span className="layout-status-user" title="Current user (change in Settings)">
+              <span className="layout-status-user" title="Signed in">
                 {currentUserName}
               </span>
             )}
@@ -49,7 +41,7 @@ export default function Layout({ children, onLogout }) {
           <Link to="/" className="layout-nav-link">Dashboard</Link>
           <Link to="/settings" className="layout-nav-link">Settings</Link>
           {onLogout && (
-            <button type="button" className="btn layout-logout" onClick={() => { clearSession(); saveSettings({ ...getSettings(), currentUserId: null }); notifySettingsSaved(); onLogout(); }}>
+            <button type="button" className="btn layout-logout" onClick={onLogout}>
               Log out
             </button>
           )}

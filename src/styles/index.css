@@ -50,6 +50,24 @@ body::before {
   min-height: 100vh;
 }
 
+.app-loading {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  color: var(--text-muted);
+}
+.app-loading-text {
+  font-family: var(--font-display);
+  letter-spacing: 0.1em;
+  color: var(--accent);
+}
+.app-loading-dots {
+  font-size: 1.5rem;
+}
+
 h1, h2, h3 {
   font-family: var(--font-display);
   font-weight: 600;

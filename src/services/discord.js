@@ -1,4 +1,5 @@
 import { getSettings, parseGithubRepo } from '../settings/useSettings'
+import { auth } from '../lib/firebase'
 
 // App theme: --accent #00d4aa, --accent-warm #ffb347
 const COLOR_MISSION = 0x00d4aa   // teal (accent)
@@ -126,10 +127,13 @@ export async function sendDiscordUpdate(type, payload = {}) {
   if (!settings.discordEnabled || !settings.discordWebhookUrl?.trim()) return
 
   const webhookUrl = settings.discordWebhookUrl.trim()
+  const fbUser = auth.currentUser
   const members = settings.teamMembers ?? []
   const currentId = settings.currentUserId
   const currentMember = currentId ? members.find((m) => m.id === currentId) : null
-  const user = currentMember?.name?.trim() || settings.userName?.trim() || 'Crew'
+  const user = fbUser
+    ? (fbUser.displayName?.trim() || fbUser.email || 'Crew')
+    : (currentMember?.name?.trim() || settings.userName?.trim() || 'Crew')
   const now = new Date()
   const { day, date } = formatDayDate(now)
 

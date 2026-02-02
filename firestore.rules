@@ -1,0 +1,12 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    // Control Centre app state (single doc) + protocol file attachments
+    match /app/controlcentre {
+      allow read, write: if true;
+    }
+    match /protocolFiles/{fileId} {
+      allow read, write: if true;
+    }
+  }
+}

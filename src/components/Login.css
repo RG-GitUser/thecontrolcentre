@@ -3,7 +3,26 @@
   display: flex;
   align-items: center;
   justify-content: center;
+  gap: 2rem;
   padding: 1.5rem;
+  flex-wrap: wrap;
+}
+
+.login-video-wrap {
+  flex-shrink: 0;
+  max-width: 320px;
+  border-radius: var(--radius);
+  overflow: hidden;
+  border: 1px solid var(--border);
+  box-shadow: var(--shadow-glow);
+}
+
+.login-video {
+  display: block;
+  width: 100%;
+  height: auto;
+  pointer-events: none;
+  user-select: none;
 }
 
 .login-panel {
@@ -60,4 +79,15 @@
 .login-submit {
   margin-top: 0.5rem;
   width: 100%;
+}
+
+.login-toggle {
+  margin-top: 0.25rem;
+  font-size: 0.8rem;
+  color: var(--text-muted);
+  background: transparent;
+  border: none;
+}
+.login-toggle:hover {
+  color: var(--accent);
 }

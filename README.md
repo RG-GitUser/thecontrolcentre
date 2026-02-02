@@ -7,7 +7,7 @@ A simple, intuitive project tracker with a **spaceship / control center** theme.
 - **Dashboard** — View all project boards, create new ones, edit or delete boards
 - **Project progress boards** — Each board has its own task list with three columns: Pending, In progress, Done
 - **Task CRUD** — Add, edit, and delete tasks; change status via dropdown or when editing
-- **Persistence** — Data is stored in your browser (localStorage) so it survives refreshes
+- **Persistence** — Data is synced to **Firebase Firestore** so it’s shared across devices and users; localStorage is used as a fallback and cache
 - **Discord updates** — Optional webhook: every change (project/task add, edit, delete) posts to Discord with commit hash (GitHub), day, date, time, user, and status/ticket details
 
 ## Discord & GitHub (optional)
@@ -16,6 +16,8 @@ A simple, intuitive project tracker with a **spaceship / control center** theme.
 2. Enable **Discord updates** and paste your **Discord webhook URL** (Channel → Edit → Integrations → Webhooks).
 3. Set **Your name** so updates are attributed.
 4. Set **GitHub repo** (`owner/repo` or full URL) so the latest commit hash on the default branch is included in each update.
+
+**Firebase:** The app uses **Firestore** (data) and **Firebase Authentication** (email/password sign-in). In the [Firebase Console](https://console.firebase.google.com/) for project `control-centre-47404`: enable **Authentication → Sign-in method → Email/Password**. Deploy Firestore rules from the project root: `firebase deploy --only firestore`. Rules are in `firestore.rules`.
 
 Each Discord message includes: **Commit**, **Day**, **Date**, **Time**, **User**, and a **Status** description (e.g. “Task X added to Pending”, “Task Y moved to Done”). For build-time commit (e.g. in CI), set `VITE_GIT_COMMIT` when building.
 

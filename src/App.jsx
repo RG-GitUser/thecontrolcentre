@@ -1,7 +1,5 @@
-import { useState, useEffect } from 'react'
 import { Routes, Route } from 'react-router-dom'
-import { getSettings } from './settings/useSettings'
-import { hasSession } from './lib/auth'
+import { useAuth } from './lib/useAuth'
 import { StoreProvider } from './store/useStore'
 import Layout from './components/Layout'
 import Dashboard from './components/Dashboard'
@@ -9,35 +7,29 @@ import ProjectBoard from './components/ProjectBoard'
 import Settings from './components/Settings'
 import Login from './components/Login'
 
-function getRequireLogin() {
-  const settings = getSettings()
-  const members = settings.teamMembers ?? []
-  return members.some((m) => !!m.passwordHash)
-}
-
 export default function App() {
-  const [loggedIn, setLoggedIn] = useState(hasSession)
-  const [requireLogin, setRequireLogin] = useState(getRequireLogin)
+  const { user, loading, signOut } = useAuth()
 
-  useEffect(() => {
-    const handler = () => setRequireLogin(getRequireLogin())
-    window.addEventListener('settingsSaved', handler)
-    return () => window.removeEventListener('settingsSaved', handler)
-  }, [])
+  if (loading) {
+    return (
+      <div className="app-loading">
+        <span className="app-loading-text">THE CONTROL CENTRE</span>
+        <span className="app-loading-dots">…</span>
+      </div>
+    )
+  }
 
-  const showLogin = requireLogin && !loggedIn
-
-  if (showLogin) {
+  if (!user) {
     return (
       <StoreProvider>
-        <Login onSuccess={() => setLoggedIn(true)} />
+        <Login />
       </StoreProvider>
     )
   }
 
   return (
     <StoreProvider>
-      <Layout onLogout={() => setLoggedIn(false)}>
+      <Layout user={user} onLogout={signOut}>
         <Routes>
           <Route path="/" element={<Dashboard />} />
           <Route path="/board/:projectId" element={<ProjectBoard />} />

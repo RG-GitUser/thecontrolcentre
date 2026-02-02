@@ -1,5 +1,10 @@
-import { createContext, useContext, useReducer, useEffect } from 'react'
+import { createContext, useContext, useReducer, useEffect, useRef } from 'react'
 import { generateId } from '../lib/uuid'
+import {
+  loadStateFromFirestore,
+  saveStateToFirestore,
+  subscribeToFirestore,
+} from '../lib/firestoreSync'
 
 const STORAGE_KEY = 'controlcenter-tracker'
 
@@ -10,7 +15,7 @@ const initialState = {
   protocolFiles: {},
 }
 
-function loadState() {
+function loadStateFromStorage() {
   try {
     const raw = localStorage.getItem(STORAGE_KEY)
     if (!raw) return initialState
@@ -30,7 +35,7 @@ function loadState() {
   }
 }
 
-function saveState(state) {
+function saveStateToStorage(state) {
   try {
     localStorage.setItem(STORAGE_KEY, JSON.stringify(state))
   } catch (e) {
@@ -142,6 +147,20 @@ function reducer(state, action) {
       return { ...state, protocols, protocolFiles }
     }
 
+    case 'HYDRATE': {
+      const payload = action.payload ?? {}
+      const projects = (payload.projects ?? []).map((p) => ({
+        ...p,
+        githubRepo: p.githubRepo ?? '',
+      }))
+      return {
+        projects,
+        tasks: payload.tasks ?? {},
+        protocols: payload.protocols ?? [],
+        protocolFiles: payload.protocolFiles ?? {},
+      }
+    }
+
     default:
       return state
   }
@@ -150,7 +169,31 @@ function reducer(state, action) {
 const StoreContext = createContext(null)
 
 export function StoreProvider({ children }) {
-  const [state, dispatch] = useReducer(reducer, loadState())
+  const [state, dispatch] = useReducer(reducer, loadStateFromStorage())
+  const hydrateFromFirestoreRef = useRef(false)
+  const firestoreLoadedRef = useRef(false)
+
+  const unsubFirestoreRef = useRef(null)
+  useEffect(() => {
+    loadStateFromFirestore()
+      .then((firestoreState) => {
+        firestoreLoadedRef.current = true
+        if (firestoreState) {
+          hydrateFromFirestoreRef.current = true
+          dispatch({ type: 'HYDRATE', payload: firestoreState })
+        }
+        unsubFirestoreRef.current = subscribeToFirestore((firestoreState) => {
+          hydrateFromFirestoreRef.current = true
+          dispatch({ type: 'HYDRATE', payload: firestoreState })
+        })
+      })
+      .catch((e) => console.warn('Firestore init failed', e))
+    return () => {
+      if (typeof unsubFirestoreRef.current === 'function') {
+        unsubFirestoreRef.current()
+      }
+    }
+  }, [])
 
   useEffect(() => {
     if (
@@ -159,8 +202,14 @@ export function StoreProvider({ children }) {
       state.protocols?.length > 0 ||
       Object.keys(state.protocolFiles ?? {}).length > 0
     ) {
-      saveState(state)
+      saveStateToStorage(state)
     }
+    if (hydrateFromFirestoreRef.current) {
+      hydrateFromFirestoreRef.current = false
+      return
+    }
+    if (!firestoreLoadedRef.current) return
+    saveStateToFirestore(state)
   }, [state])
 
   return (

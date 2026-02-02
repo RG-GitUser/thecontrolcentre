@@ -61,8 +61,18 @@ export default function Dashboard() {
   return (
     <div className="dashboard">
       <div className="dashboard-hero">
-        <h1 className="dashboard-title">MISSION DASHBOARD</h1>
-        <p className="dashboard-subtitle">Select a project board or deploy a new one</p>
+        <div className="dashboard-hero-content">
+          <div>
+            <h1 className="dashboard-title">MISSION DASHBOARD</h1>
+            <p className="dashboard-subtitle">Select a project board or deploy a new one</p>
+          </div>
+          <img
+            src={`${import.meta.env.BASE_URL || '/'}assets/alien.png`}
+            alt=""
+            className="dashboard-alien"
+            aria-hidden
+          />
+        </div>
       </div>
 
       <div className="dashboard-actions">
